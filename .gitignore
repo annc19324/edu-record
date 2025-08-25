@@ -2,4 +2,5 @@ node_modules/
 client/build/
 .env
 server/.env
-test.js
+server/test.js
+server/temp.txt
