@@ -35,7 +35,7 @@ pool.connect((err, client, release) => {
 })
 
 //api cơ bản để test
-app.get('/test', async (req, res) => {
+app.get('/api/test', async (req, res) => {
     try {
         const result = await pool.query('select * from records');
         res.json(result.rows);
@@ -44,6 +44,22 @@ app.get('/test', async (req, res) => {
         res.status(500).json({ error: 'lỗi server' });
     }
 });
+
+//thêm post record mới
+app.post('/api/test', async (req, res) => {
+    try {
+        const { student_id, subject, grade, semester } = req.body;
+        const result = await pool.query(
+            'insert into records (student_id, subject, grade, semester) values ($1, $2, $3, $4) returning *',
+            [student_id, subject, grade, semester]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('lỗi khi thêm: ', err.stack);
+        res.status(500).json({err: 'Lỗi server'});
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Server đang chạy trên http://localhost:${port}`);
