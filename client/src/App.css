@@ -41,7 +41,7 @@
 /* 
  */
 .App {
-  max-width: 500px;
+  max-width: 600px;
   margin: 20px auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -73,11 +73,12 @@ label {
   flex: 1;
   font-weight: bold;
   color: #555;
+  text-align: left;
 }
 
 input,
 button {
-  flex: 2;
+  flex: 1.5;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -92,7 +93,8 @@ button {
 }
 
 button:hover {
-  background: #0056b3;
+  background: white;
+  color: #007bff;
 }
 
 ul {
@@ -141,7 +143,14 @@ li a:hover {
   color: white;
 }
 
-li button :hover {
-  background: white;
-  color: #007bff;
+.info-part {
+  flex: 2;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-part {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
 }
