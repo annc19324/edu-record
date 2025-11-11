@@ -1,0 +1,267 @@
+/* src/styles/Home.css */
+.home-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.home-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.notification {
+    margin: 15px auto;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    max-width: 800px;
+    animation: slideDown 0.4s ease;
+}
+
+.notification.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.notification.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.home-content {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Danh sách - 70% */
+.record-list-section {
+    flex: 7;
+    min-width: 300px;
+}
+
+.record-list-section h2 {
+    color: #34495e;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.no-data {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 20px;
+}
+
+.record-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ===== DANH SÁCH HỒ SƠ - CỘT CỐ ĐỊNH ===== */
+.record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.record-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #3498db;
+}
+
+.record-info {
+    display: grid;
+    grid-template-columns: 130px 280px 75px 105px;
+    /* SV | Môn | Điểm | HK */
+    gap: 12px;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.info-field {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+/* Màu nền nhẹ cho từng cột */
+.info-field.msv {
+    background-color: #f0f8ff;
+    color: #2980b9;
+}
+
+.info-field.mon {
+    background-color: #f0f8ff;
+    color: #2980b9;
+}
+
+.info-field.diem {
+    background-color: #f0f8ff;
+    color: #2980b9;
+}
+
+.info-field.hk {
+    background-color: #f0f8ff;
+    color: #2980b9;
+}
+
+/* Nút hành động */
+.record-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-view,
+.btn-download {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 50px;
+    text-align: center;
+}
+
+.btn-view {
+    background: #ecf0f1;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.btn-view:hover {
+    background: #3498db;
+    color: white;
+}
+
+.btn-download {
+    background: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-download:hover {
+    background: #219653;
+}
+
+.no-file {
+    color: #95a5a6;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Form - 30% */
+.form-section {
+    flex: 3;
+    min-width: 280px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 8px;
+}
+
+.record-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-group input[type="file"] {
+    padding: 8px 0;
+}
+
+.btn-submit {
+    margin-top: 10px;
+    padding: 12px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background: #c0392b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .home-content {
+        flex-direction: column;
+    }
+
+    .record-list-section,
+    .form-section {
+        flex: 1;
+    }
+}
