@@ -29,25 +29,45 @@ router.post('/upload', upload.single('file'), async (req, res) => {
                 return res.status(503).json({ error: 'IPFS chưa sẵn sàng' });
             }
 
+            // KIỂM TRA KẾT NỐI IPFS BẰNG POST /api/v0/version (SỬA LỖI 405)
             try {
-                await ipfs.id(); // Kiểm tra kết nối
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000);
+
+                const res = await fetch('http://127.0.0.1:5001/api/v0/version', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: '', // Không cần tham số
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeout);
+
+                if (!res.ok) throw new Error(`IPFS API trả về HTTP ${res.status}`);
             } catch (err) {
-                console.error('IPFS không hoạt động:', err);
-                return res.status(503).json({ error: 'IPFS Desktop chưa được bật' });
+                console.error('IPFS không hoạt động:', err.message);
+                return res.status(503).json({ error: 'IPFS Desktop chưa được bật hoặc không phản hồi' });
             }
 
-            const { buffer, originalname } = req.file;
-            const result = await ipfs.add({ content: buffer, path: originalname });
-            ipfs_hash = result.cid.toString();
-            console.log(`PDF uploaded to IPFS: ${ipfs_hash}`);
+            // UPLOAD FILE LÊN IPFS
+            try {
+                const { buffer, originalname } = req.file;
+                const result = await ipfs.add({ content: buffer, path: originalname });
+                ipfs_hash = result.cid.toString();
+                console.log(`PDF uploaded to IPFS: ${ipfs_hash}`);
+            } catch (err) {
+                console.error('Lỗi upload lên IPFS:', err.message);
+                return res.status(500).json({ error: 'Lỗi upload file lên IPFS' });
+            }
         }
 
+        // LƯU VÀO DATABASE
         const query = `
       INSERT INTO records (student_id, subject, grade, semester, ipfs_hash)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-        const values = [student_id, subject, grade, semester, ipfs_hash];
+        const values = [student_id, subject, grade, semester, ipfs_hash || null];
         const { rows } = await pool.query(query, values);
 
         res.status(201).json({ record: rows[0] });
