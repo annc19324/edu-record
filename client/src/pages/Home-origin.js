@@ -2,20 +2,16 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import '../assets/styles/Home.css';
 import { fetchRecords, uploadRecord, downloadFile } from '../services/api';
-import Login from './Login';
-import { logout } from '../services/auth';
 
-const Home = ({ user, setUser }) => {
+const Home = () => {
     const [records, setRecords] = useState([]);
     const [formData, setFormData] = useState({
         student_id: '', subject: '', grade: '', semester: '',
     });
     const [file, setFile] = useState(null);
     const [notification, setNotification] = useState(null);
-    const [showLogin, setShowLogin] = useState(false);
 
-    const isAdmin = user?.role === 'ADMIN';
-
+    // Tự động sắp xếp: mới nhất ở đầu
     const sortedRecords = useMemo(() =>
         [...records].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
         [records]
@@ -58,7 +54,9 @@ const Home = ({ user, setUser }) => {
         const errors = validate();
         if (Object.keys(errors).length > 0) {
             showNotification(
-                <ul className="error-list">{Object.values(errors).map((msg, i) => <li key={i}>{msg}</li>)}</ul>,
+                <ul className="error-list">
+                    {Object.values(errors).map((msg, i) => <li key={i}>{msg}</li>)}
+                </ul>,
                 'error'
             );
             return;
@@ -86,22 +84,7 @@ const Home = ({ user, setUser }) => {
 
     return (
         <div className="home-container">
-            {/* Header với nút Đăng nhập / Đăng xuất */}
-            <div className="header-bar">
-                <h1 className="home-title">Quản lý hồ sơ học tập</h1>
-                <div className="auth-controls">
-                    {user ? (
-                        <div className="user-info">
-                            <span>Xin chào, <strong>{user.email}</strong> ({user.role})</span>
-                            <button onClick={logout} className="btn-logout">Đăng xuất</button>
-                        </div>
-                    ) : (
-                        <button onClick={() => setShowLogin(true)} className="btn-login-header">
-                            Đăng nhập (Admin)
-                        </button>
-                    )}
-                </div>
-            </div>
+            <h1 className="home-title">Quản lý hồ sơ học tập</h1>
 
             {notification && (
                 <div className={`notification ${notification.type}`}>
@@ -110,7 +93,7 @@ const Home = ({ user, setUser }) => {
             )}
 
             <div className="home-content">
-                {/* Danh sách - Luôn hiển thị */}
+                {/* Danh sách */}
                 <div className="record-list-section">
                     <h2>Danh sách hồ sơ</h2>
                     {sortedRecords.length === 0 ? (
@@ -143,51 +126,34 @@ const Home = ({ user, setUser }) => {
                     )}
                 </div>
 
-                {/* FORM - CHỈ ADMIN */}
-                {isAdmin && (
-                    <div className="form-section">
-                        <h2>Thêm hồ sơ</h2>
-                        <form onSubmit={handleSubmit} className="record-form">
-                            {['student_id', 'subject', 'grade', 'semester'].map(field => (
-                                <div key={field} className="form-group">
-                                    <label>
-                                        {field === 'student_id' ? 'Mã sinh viên' :
-                                            field === 'subject' ? 'Môn học' :
-                                                field === 'grade' ? 'Điểm' : 'Học kỳ'}:
-                                    </label>
-                                    <input
-                                        type={field === 'grade' ? 'number' : 'text'}
-                                        name={field}
-                                        value={formData[field]}
-                                        onChange={handleChange}
-                                        required
-                                        min={field === 'grade' ? 0 : undefined}
-                                        max={field === 'grade' ? 10 : undefined}
-                                        step={field === 'grade' ? 0.1 : undefined}
-                                        placeholder={field === 'student_id' ? '11 số' : field === 'semester' ? 'HK1-2024' : field === 'grade' ? '0.0 - 10.0' : 'Tên môn'}
-                                    />
-                                </div>
-                            ))}
-                            <div className="form-group">
-                                <label>Tệp PDF:</label>
-                                <input type="file" accept=".pdf" onChange={handleChange} />
+                {/* Form */}
+                <div className="form-section">
+                    <h2>Thêm hồ sơ</h2>
+                    <form onSubmit={handleSubmit} className="record-form">
+                        {['student_id', 'subject', 'grade', 'semester'].map(field => (
+                            <div key={field} className="form-group">
+                                <label>{field === 'student_id' ? 'Mã sinh viên' : field === 'subject' ? 'Môn học' : field === 'grade' ? 'Điểm' : 'Học kỳ'}:</label>
+                                <input
+                                    type={field === 'grade' ? 'number' : 'text'}
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    required
+                                    min={field === 'grade' ? 0 : undefined}
+                                    max={field === 'grade' ? 10 : undefined}
+                                    step={field === 'grade' ? 0.1 : undefined}
+                                    placeholder={field === 'student_id' ? '11 số' : field === 'semester' ? 'HK1-2024' : field === 'grade' ? '0.0 - 10.0' : 'Tên môn'}
+                                />
                             </div>
-                            <button type="submit" className="btn-submit">Thêm hồ sơ</button>
-                        </form>
-                    </div>
-                )}
+                        ))}
+                        <div className="form-group">
+                            <label>Tệp PDF:</label>
+                            <input type="file" accept=".pdf" onChange={handleChange} />
+                        </div>
+                        <button type="submit" className="btn-submit">Thêm hồ sơ</button>
+                    </form>
+                </div>
             </div>
-
-            {/* Modal Đăng nhập */}
-            {showLogin && !user && (
-                <Login
-                    onLogin={(u) => {
-                        setUser(u);
-                        setShowLogin(false);
-                    }}
-                    onClose={() => setShowLogin(false)}
-                />
-            )}
         </div>
     );
 };

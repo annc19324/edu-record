@@ -35,10 +35,12 @@ export const uploadRecord = async (formData, file) => {
     }
 };
 
+// client/src/services/api.js
 export const downloadFile = async (ipfs_hash, fileName) => {
     try {
+        // DÙNG GATEWAY (8080) → KHÔNG QUA SERVER
         const response = await fetch(`http://localhost:8080/ipfs/${ipfs_hash}`);
-        if (!response.ok) throw new Error('Lỗi tải tệp');
+        if (!response.ok) throw new Error('Lỗi tải tệp từ IPFS Gateway');
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
